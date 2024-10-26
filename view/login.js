@@ -6,6 +6,27 @@ export default function Login({navigation}){
     const [Usuario, setUsuario] = useState("");
     const [Senha, setSenha] = useState("");
 
+    async function sendForm() {
+        let response=await fetch('https://192.168.0.102:3000/login',{
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nome: Usuario,
+                password: Senha
+            })
+        });
+        let json=await response.json();
+        if(json === 'error'){
+            setDisplay('flex');
+            setTimeout(()=>{
+                setDisplay('none');
+            },5000);
+        }
+    }
+
     return(
     <View style={styles.container}>
         <Image style={styles.img} source={require('./LogoDC.jpeg')}>

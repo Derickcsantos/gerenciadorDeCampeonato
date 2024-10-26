@@ -8,6 +8,10 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 const models = require('./models');
+let port = process.env.PORT || 3000;
+app.listen(port,(req,res)=>{
+    console.log("Servidor rodando!")
+})
 
 app.get('/', (req, res)=>{
     res.send('Servidor backend já está rodando!');
@@ -15,7 +19,7 @@ app.get('/', (req, res)=>{
 
 let usuario = models.Usuario;
 
-app.get('/create', async(req, res)=>{
+app.get('/createUser', async(req, res)=>{
     let create = await usuario.create({
         nome: req.body.nome,
         password: req.body.password,
@@ -28,6 +32,8 @@ app.get('/read', async(req, res)=>{
     let read=await user.findALL({
         raw:true,
     });
+    console.log(read);
+    res = read;
 });
 
 app.get('/update', async(req, res)=>{
@@ -36,7 +42,7 @@ app.get('/update', async(req, res)=>{
         response.save();
     }) ;
     console.log(update);
-});
+});    
 
 app.get('/delete', async(req, res)=>{
     user.destroy({
@@ -46,7 +52,7 @@ app.get('/delete', async(req, res)=>{
 
 app.post('/login', async(req, res)=>{
     let response=await user.findOne({
-        where:{name:req.body.name, password: req.body.password}
+        where:{nome:req.body.nome, password: req.body.password}
     });
     if(response === null){
         req.send(JSON.stringify('error'));
@@ -54,3 +60,4 @@ app.post('/login', async(req, res)=>{
         res.send(response);
     }
 });
+
